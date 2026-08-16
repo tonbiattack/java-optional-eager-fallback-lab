@@ -5,9 +5,8 @@ import java.util.Optional;
 /**
  * Selects a requested coupon or a repository-provided default.
  *
- * <p>BUG: the fallback expression passed to {@code orElse} is evaluated even
- * when the Optional already contains a value. That causes an unnecessary
- * repository call and can trigger side effects.</p>
+ * <p>The default lookup is supplied as a method reference so it is evaluated
+ * only when the requested coupon is absent.</p>
  */
 public final class CouponSelector {
 
@@ -18,6 +17,6 @@ public final class CouponSelector {
     }
 
     public String selectCoupon(Optional<String> requestedCoupon) {
-        return requestedCoupon.orElse(repository.findDefaultCoupon());
+        return requestedCoupon.orElseGet(repository::findDefaultCoupon);
     }
 }
